@@ -22,7 +22,7 @@ The filter successfully estimates 4D state (position + velocity) from noisy 2D p
 
 | **Position Trajectory (X-Y Plane)** | **Velocity Components (Over Time)** |
 |---|---|
-| velocity_plot.svg[Position Plot]) | (velocity_plot.svg)[Velocity Plot] |
+| ![Position Plot](https://raw.githubusercontent.com/GAkbulutlar/Multi-variateKalmanFilter/main/position_plot.svg) | ![Velocity Plot](https://raw.githubusercontent.com/GAkbulutlar/Multi-variateKalmanFilter/main/velocity_plot.svg) |
 | Ground truth path vs Kalman estimates in 2D space | Estimated Vx and Vy components showing filter convergence |
 
 ### Generated Files
