@@ -28,6 +28,8 @@ public:
         VectorXd measurement;      ///< Noisy sensor measurement.
         VectorXd estimate;         ///< Kalman posterior estimate.
         MatrixXd covariance;       ///< Posterior covariance matrix P.
+        double measErrorSq = 0.0;  ///< Squared position error of measurement vs truth.
+        double kfErrorSq = 0.0;    ///< Squared position error of estimate vs truth.
     };
 
     /// Constructor: Initialize the Kalman filter with system parameters.

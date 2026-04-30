@@ -70,7 +70,6 @@ int main() {
         std::normal_distribution<double> measurementNoise(0.0, std::sqrt(0.25));
 
         std::vector<VectorXd> truthStates;      // Ground truth.
-        std::vector<VectorXd> measurements;     // Noisy measurements.
         std::vector<KalmanFilter::SimulationState> results;  // Kalman filter results.
 
         VectorXd trueState = VectorXd::Zero(4);
@@ -116,7 +115,14 @@ int main() {
             // Store results.
             VectorXd estimate = kf.GetState();
             truthStates.push_back(trueState);
-            measurements.push_back(measurement);
+
+            const double dxMeas = trueState(0) - measurement(0);
+            const double dyMeas = trueState(1) - measurement(1);
+            const double dxKf = trueState(0) - estimate(0);
+            const double dyKf = trueState(1) - estimate(1);
+
+            const double measErrorSq = dxMeas * dxMeas + dyMeas * dyMeas;
+            const double kfErrorSq = dxKf * dxKf + dyKf * dyKf;
 
             KalmanFilter::SimulationState simState;
             simState.step = step;
@@ -124,6 +130,8 @@ int main() {
             simState.measurement = measurement;
             simState.estimate = estimate;
             simState.covariance = kf.GetCovariance();
+            simState.measErrorSq = measErrorSq;
+            simState.kfErrorSq = kfErrorSq;
             results.push_back(simState);
 
             // Print progress every 20 steps.
@@ -143,19 +151,23 @@ int main() {
         std::cout << "\n";
 
         // --- Performance Metrics ---
-        std::vector<Eigen::VectorXd> estimateStates;
-        for (const auto& res : results) {
-            estimateStates.push_back(res.estimate);
+        double sumMeasErrSq = 0.0;
+        double sumKfErrSq = 0.0;
+        for (const auto& sample : results) {
+            sumMeasErrSq += sample.measErrorSq;
+            sumKfErrSq += sample.kfErrorSq;
         }
 
-        double posRMSE = utils::ComputeRMSE(truthStates, estimateStates);
+        const double measRMSE = std::sqrt(sumMeasErrSq / static_cast<double>(results.size()));
+        const double posRMSE = std::sqrt(sumKfErrSq / static_cast<double>(results.size()));
+        std::cout << "Position RMSE (measurement vs truth): " << std::fixed << std::setprecision(4) << measRMSE << " units\n";
         std::cout << "Position RMSE (estimate vs truth): " << std::fixed << std::setprecision(4) << posRMSE << " units\n";
 
         // Compute velocity RMSE (only for estimate vs truth, since velocity is not measured).
         double velRMSE = 0.0;
         for (std::size_t i = 0; i < truthStates.size(); ++i) {
-            double vxErr = estimateStates[i](2) - truthStates[i](2);
-            double vyErr = estimateStates[i](3) - truthStates[i](3);
+            double vxErr = results[i].estimate(2) - truthStates[i](2);
+            double vyErr = results[i].estimate(3) - truthStates[i](3);
             velRMSE += vxErr * vxErr + vyErr * vyErr;
         }
         velRMSE = std::sqrt(velRMSE / (2.0 * truthStates.size()));

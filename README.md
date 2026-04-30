@@ -2,6 +2,16 @@
 
 A production-ready Kalman filter implementation in modern C++ for 2D motion tracking with velocity estimation. This project demonstrates professional software engineering practices suitable for a GitHub portfolio.
 
+## Visual Highlights
+
+| Trajectory Animation | RMSE Comparison |
+|---|---|
+| ![Trajectory Animation](trajectory_animation.gif) | ![RMSE Comparison](rmse_comparison.png) |
+
+The animation shows how Ground Truth, Measurements, and Kalman Estimate trajectories evolve over time.
+The RMSE chart compares position error performance using:
+$RMSE = \sqrt{mean(error\_sq)}$.
+
 ## Features
 
 - **4D State Vector**: Position (X, Y) and Velocity (Vx, Vy) tracking
@@ -15,7 +25,8 @@ A production-ready Kalman filter implementation in modern C++ for 2D motion trac
 - **CI Validation**: GitHub Actions builds and runs `ctest` on push and pull requests
 - **Comprehensive Documentation**: Inline code comments explaining mathematical concepts
 - **Performance Analysis**: RMSE metrics and comparison plots
-- **SVG Visualization**: Browser-ready plots without external dependencies
+- **Animated Visualization**: Frame-by-frame trajectory GIF generation via Matplotlib
+- **RMSE Comparison Chart**: Side-by-side bar chart for Measurement vs Kalman Estimate
 - **CSV Export**: Raw simulation data for further analysis
 
 ## Simulation Results
@@ -24,15 +35,17 @@ The filter successfully estimates 4D state (position + velocity) from noisy 2D p
 
 ### Output Visualizations
 
-| **Position Trajectory (X-Y Plane)** | **Velocity Components (Over Time)** |
-|---|---|
-| ![Position Plot](https://raw.githubusercontent.com/GAkbulutlar/Multi-variateKalmanFilter/main/position_plot.svg) | ![Velocity Plot](https://raw.githubusercontent.com/GAkbulutlar/Multi-variateKalmanFilter/main/velocity_plot.svg) |
-| Ground truth path vs Kalman estimates in 2D space | Estimated Vx and Vy components showing filter convergence |
+![Trajectory Animation](trajectory_animation.gif)
+
+Ground truth, noisy measurements, and Kalman estimate trajectories grow frame-by-frame to show convergence behavior over time.
+
+[Velocity Plot](https://raw.githubusercontent.com/GAkbulutlar/Multi-variateKalmanFilter/main/velocity_plot.svg) |
+| Ground truth path vs Kalman estimates in 2D space | Estimated Vx and Vy components showing filter convergence 
 
 ### Generated Files
 - **simulation_results.csv**: Complete time-series data (step, truth states, measurements, estimates)
-- **position_plot.svg**: 2D trajectory showing ground truth (red), measurements (orange dashed), and estimates (blue)
-- **velocity_plot.svg**: Dual subplot showing velocity X and Y components over 20-second simulation
+- **trajectory_animation.gif**: Animated 2D trajectory (truth vs measurement vs Kalman estimate)
+- **rmse_comparison.png**: Side-by-side RMSE comparison (measurement vs Kalman estimate)
 
 ## Project Structure
 
@@ -42,8 +55,9 @@ MultiVariateKalmanFilter/
 ├── CMakeLists.txt          # CMake build configuration
 ├── KalmanFilter.h          # Filter class definition with detailed documentation
 ├── KalmanFilter.cpp        # Core Kalman filter implementation (Predict/Update)
-├── Utilities.h             # CSV export and SVG visualization helpers
+├── Utilities.h             # CSV export and plotting helper utilities
 ├── main.cpp                # Simulation loop and system integration
+├── visualize_metrics.py    # Python script for RMSE chart and GIF animation
 ├── tests/test_kalman.cpp   # Unit tests (GoogleTest)
 └── README.md               # This file
 ```
@@ -165,20 +179,38 @@ Execute the compiled binary:
 
 ### Output
 
-The program generates three output files:
+The C++ program generates three output files:
 
 1. **simulation_results.csv**: Complete simulation data
-   - Columns: step, truth_x, truth_y, truth_vx, truth_vy, meas_x, meas_y, est_x, est_y, est_vx, est_vy
+   - Columns: step, truth_x, truth_y, truth_vx, truth_vy, meas_x, meas_y, est_x, est_y, est_vx, est_vy, meas_error_sq, kf_error_sq
    - Use with Python/pandas, Excel, or other tools for custom analysis
+   - Per-step error definitions:
+     - $error_{meas} = (true_x - meas_x)^2 + (true_y - meas_y)^2$
+     - $error_{kf} = (true_x - est_x)^2 + (true_y - est_y)^2$
 
-2. **position_plot.svg**: 2D X-Y trajectory visualization
-   - Shows ground truth, noisy measurements, and Kalman estimates
-   - Open in any web browser or vector editor
+2. **trajectory_animation.gif**: Animated 2D trajectory visualization
+   - Ground truth, noisy measurements, and Kalman estimates grow over time
+   - Makes convergence behavior easy to inspect visually
 
-3. **velocity_plot.svg**: Velocity components over time
-   - Top subplot: Vx (X-component velocity)
-   - Bottom subplot: Vy (Y-component velocity)
-   - Compares ground truth vs Kalman estimates
+3. **rmse_comparison.png**: Position RMSE comparison chart
+   - Side-by-side comparison of measurement error vs Kalman estimate error
+   - Computed from squared error columns exported by the simulator
+
+### Python Metrics and Animation
+
+Use the Python script to generate the top visuals from `simulation_results.csv`:
+
+```bash
+pip install matplotlib pillow
+python visualize_metrics.py
+```
+
+It outputs:
+
+1. **rmse_comparison.png**: Bar chart comparing
+   - $RMSE_{measurement} = \sqrt{mean(meas\_error\_sq)}$
+   - $RMSE_{kalman} = \sqrt{mean(kf\_error\_sq)}$
+2. **trajectory_animation.gif**: Animated trajectory where all three curves grow frame-by-frame
 
 ### Console Output Example
 
@@ -199,8 +231,8 @@ Velocity RMSE (estimate vs truth): 0.0324 units/s
 
 --- Exporting Results ---
 CSV exported to: simulation_results.csv
-Position plot SVG exported to: position_plot.svg
-Velocity plot SVG exported to: velocity_plot.svg
+RMSE chart saved to: rmse_comparison.png
+Trajectory animation saved to: trajectory_animation.gif
 
 Simulation completed successfully!
 ```
@@ -237,7 +269,7 @@ public:
 
 Provides helper functions for:
 - **CSV Export**: Structured data output for post-processing
-- **SVG Visualization**: Self-contained plots with no external dependencies
+- **Trajectory/Plot Export**: Data outputs for animation and chart generation
 - **RMSE Calculation**: Performance evaluation metrics
 
 ## Key Parameters and Tuning
@@ -280,7 +312,7 @@ This implementation provides a foundation for:
 
 To verify the implementation:
 
-1. Check SVG outputs visually—estimates should track truth with lag proportional to noise
+1. Check trajectory animation visually—estimates should track truth with lag proportional to noise
 2. Verify RMSE values: estimate error should be significantly lower than measurement error
 3. Monitor covariance decay: should stabilize after initial transient
 4. Review CSV data: sanity-check intermediate values and trends
@@ -313,5 +345,5 @@ Developed as a professional C++ demonstration project showcasing:
 - Object-oriented design with clear interfaces
 - Proper error handling and validation
 - Template-friendly code using Eigen for generic linear algebra
-- No external visualization dependencies (pure SVG)
+- Automated visualization pipeline with animated trajectories and RMSE charts
 - Professional git-ready project structure

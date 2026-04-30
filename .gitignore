@@ -44,3 +44,6 @@ Thumbs.db
 *.bak
 *.orig
 *.rej
+
+# Local Python environments
+.venv/

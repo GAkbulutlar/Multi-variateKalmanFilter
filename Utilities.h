@@ -60,8 +60,8 @@ void ExportToCSV(
         throw std::runtime_error("Cannot open file for writing: " + filePath);
     }
 
-    // Write header: step, truth_x, truth_y, truth_vx, truth_vy, meas_x, meas_y, est_x, est_y, est_vx, est_vy
-    file << "step,truth_x,truth_y,truth_vx,truth_vy,meas_x,meas_y,est_x,est_y,est_vx,est_vy\n";
+    // Write header with per-step squared position errors.
+    file << "step,truth_x,truth_y,truth_vx,truth_vy,meas_x,meas_y,est_x,est_y,est_vx,est_vy,meas_error_sq,kf_error_sq\n";
 
     // Write data rows.
     for (const auto& sample : samples) {
@@ -83,7 +83,9 @@ void ExportToCSV(
             file << std::fixed << std::setprecision(6) << sample.estimate(i);
             if (i < sample.estimate.size() - 1) file << ",";
         }
-        file << "\n";
+        file << "," << std::fixed << std::setprecision(6) << sample.measErrorSq
+             << "," << std::fixed << std::setprecision(6) << sample.kfErrorSq
+             << "\n";
     }
 
     file.close();
