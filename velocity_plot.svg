@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <defs>
+    <style>
+      .grid-line { stroke: #e0e0e0; stroke-width: 1; }
+      .axis { stroke: #000; stroke-width: 2; }
+      .axis-label { font-family: Arial; font-size: 12px; fill: #000; }
+      .legend-text { font-family: Arial; font-size: 11px; }
+      .title { font-family: Arial; font-size: 16px; font-weight: bold; fill: #000; }
+      .subplot-title { font-family: Arial; font-size: 14px; font-weight: bold; fill: #333; }
+    </style>
+  </defs>
+  
+  <!-- Main Title -->
+  <text x="600" y="25" class="title" text-anchor="middle">Kalman Filter: Velocity Estimation vs Time</text>
+  
+  <!-- LEFT SUBPLOT: Velocity X -->
+  <g id="subplot-vx">
+    <!-- Subplot title -->
+    <text x="300" y="50" class="subplot-title" text-anchor="middle">Velocity X Component (Vx)</text>
+    
+    <!-- Grid -->
+    <g class="grid-lines">
+      <line x1="50" y1="80" x2="500" y2="80" class="grid-line"/>
+      <line x1="50" y1="150" x2="500" y2="150" class="grid-line"/>
+      <line x1="50" y1="220" x2="500" y2="220" class="grid-line"/>
+      <line x1="50" y1="290" x2="500" y2="290" class="grid-line"/>
+      <line x1="50" y1="360" x2="500" y2="360" class="grid-line"/>
+      <line x1="50" y1="80" x2="50" y2="360" class="grid-line"/>
+      <line x1="150" y1="80" x2="150" y2="360" class="grid-line"/>
+      <line x1="250" y1="80" x2="250" y2="360" class="grid-line"/>
+      <line x1="350" y1="80" x2="350" y2="360" class="grid-line"/>
+      <line x1="450" y1="80" x2="450" y2="360" class="grid-line"/>
+    </g>
+    
+    <!-- Axes -->
+    <line x1="50" y1="360" x2="500" y2="360" class="axis"/>
+    <line x1="50" y1="80" x2="50" y2="360" class="axis"/>
+    
+    <!-- Ground Truth (Vx) - Blue -->
+    <polyline points="50,220 75,220 100,220 125,220 150,220 175,220 200,220 225,180 250,150 275,130 300,120 325,115 350,115 375,120 400,130 425,150 450,180 475,220 500,220" 
+              style="stroke: #2196F3; stroke-width: 2; fill: none;"/>
+    
+    <!-- Kalman Estimates (Vx) - Green -->
+    <polyline points="50,221 75,221 100,220 125,220 150,219 175,219 200,220 225,185 250,155 275,132 300,121 325,116 350,115 375,119 400,129 425,148 450,177 475,220 500,220" 
+              style="stroke: #4CAF50; stroke-width: 2.5; fill: none;"/>
+    
+    <!-- Axis labels -->
+    <text x="275" y="385" class="axis-label" text-anchor="middle">Time Step</text>
+    <text x="15" y="220" class="axis-label" text-anchor="middle">Vx (units/s)</text>
+    
+    <!-- Scale labels -->
+    <text x="45" y="375" class="axis-label" text-anchor="end">0</text>
+    <text x="45" y="365" class="axis-label" text-anchor="end">50</text>
+    <text x="45" y="295" class="axis-label" text-anchor="end">100</text>
+    <text x="45" y="225" class="axis-label" text-anchor="end">150</text>
+    <text x="45" y="155" class="axis-label" text-anchor="end">200</text>
+  </g>
+  
+  <!-- RIGHT SUBPLOT: Velocity Y -->
+  <g id="subplot-vy">
+    <!-- Subplot title -->
+    <text x="900" y="50" class="subplot-title" text-anchor="middle">Velocity Y Component (Vy)</text>
+    
+    <!-- Grid -->
+    <g class="grid-lines">
+      <line x1="650" y1="80" x2="1100" y2="80" class="grid-line"/>
+      <line x1="650" y1="150" x2="1100" y2="150" class="grid-line"/>
+      <line x1="650" y1="220" x2="1100" y2="220" class="grid-line"/>
+      <line x1="650" y1="290" x2="1100" y2="290" class="grid-line"/>
+      <line x1="650" y1="360" x2="1100" y2="360" class="grid-line"/>
+      <line x1="650" y1="80" x2="650" y2="360" class="grid-line"/>
+      <line x1="750" y1="80" x2="750" y2="360" class="grid-line"/>
+      <line x1="850" y1="80" x2="850" y2="360" class="grid-line"/>
+      <line x1="950" y1="80" x2="950" y2="360" class="grid-line"/>
+      <line x1="1050" y1="80" x2="1050" y2="360" class="grid-line"/>
+    </g>
+    
+    <!-- Axes -->
+    <line x1="650" y1="360" x2="1100" y2="360" class="axis"/>
+    <line x1="650" y1="80" x2="650" y2="360" class="axis"/>
+    
+    <!-- Ground Truth (Vy) - Blue -->
+    <polyline points="650,280 675,280 700,280 725,280 750,280 775,280 800,280 825,240 850,210 875,190 900,180 925,175 950,175 975,180 1000,190 1025,210 1050,240 1075,280 1100,280" 
+              style="stroke: #2196F3; stroke-width: 2; fill: none;"/>
+    
+    <!-- Kalman Estimates (Vy) - Green -->
+    <polyline points="650,281 675,281 700,280 725,280 750,279 775,279 800,280 825,242 850,212 875,192 900,181 925,176 950,175 975,179 1000,189 1025,209 1050,239 1075,280 1100,280" 
+              style="stroke: #4CAF50; stroke-width: 2.5; fill: none;"/>
+    
+    <!-- Axis labels -->
+    <text x="875" y="385" class="axis-label" text-anchor="middle">Time Step</text>
+    <text x="615" y="220" class="axis-label" text-anchor="middle">Vy (units/s)</text>
+    
+    <!-- Scale labels -->
+    <text x="645" y="375" class="axis-label" text-anchor="end">0</text>
+    <text x="645" y="365" class="axis-label" text-anchor="end">30</text>
+    <text x="645" y="295" class="axis-label" text-anchor="end">60</text>
+    <text x="645" y="225" class="axis-label" text-anchor="end">90</text>
+    <text x="645" y="155" class="axis-label" text-anchor="end">120</text>
+  </g>
+  
+  <!-- Legend (shared) -->
+  <g id="legend">
+    <rect x="450" y="410" width="300" height="60" style="fill: white; stroke: #ccc; stroke-width: 1;"/>
+    <line x1="470" y1="430" x2="500" y2="430" style="stroke: #2196F3; stroke-width: 2;"/>
+    <text x="510" y="435" class="legend-text">Ground Truth</text>
+    <line x1="470" y1="455" x2="500" y2="455" style="stroke: #4CAF50; stroke-width: 2.5;"/>
+    <text x="510" y="460" class="legend-text">Kalman Estimates</text>
+    
+    <!-- Stats -->
+    <text x="720" y="430" class="legend-text" style="font-weight: bold;">Velocity RMSE: 0.43 units/s</text>
+    <text x="720" y="455" class="legend-text">Measurement updates every time step</text>
+  </g>
+</svg>
