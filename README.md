@@ -9,6 +9,10 @@ A production-ready Kalman filter implementation in modern C++ for 2D motion trac
 - **Eigen 3 Integration**: Efficient linear algebra using industry-standard Eigen library
 - **CMake Build System**: Modern, cross-platform build configuration
 - **Clean Architecture**: Separation of concerns with header/implementation files
+- **Library-Consumer Design**: Reusable `KalmanLib` linked by both app and tests
+- **Integrated Unit Testing**: GoogleTest fetched via CMake `FetchContent`
+- **Modern Test Discovery**: `gtest_discover_tests(unit_tests)` for CTest visibility
+- **CI Validation**: GitHub Actions builds and runs `ctest` on push and pull requests
 - **Comprehensive Documentation**: Inline code comments explaining mathematical concepts
 - **Performance Analysis**: RMSE metrics and comparison plots
 - **SVG Visualization**: Browser-ready plots without external dependencies
@@ -34,11 +38,13 @@ The filter successfully estimates 4D state (position + velocity) from noisy 2D p
 
 ```
 MultiVariateKalmanFilter/
+├── .github/workflows/ci.yml # CI pipeline (build + test)
 ├── CMakeLists.txt          # CMake build configuration
 ├── KalmanFilter.h          # Filter class definition with detailed documentation
 ├── KalmanFilter.cpp        # Core Kalman filter implementation (Predict/Update)
 ├── Utilities.h             # CSV export and SVG visualization helpers
 ├── main.cpp                # Simulation loop and system integration
+├── tests/test_kalman.cpp   # Unit tests (GoogleTest)
 └── README.md               # This file
 ```
 
@@ -114,28 +120,47 @@ vcpkg install eigen3:x64-windows
 # Clone or navigate to the project directory
 cd MultiVariateKalmanFilter
 
-# Create build directory
-mkdir build
-cd build
-
 # Generate build files
-cmake ..
+cmake -S . -B build
 
 # Build the project
-cmake --build . --config Release
+cmake --build build --config Release
 
 # Run the executable
-./bin/kalman_filter_app  # Linux/macOS
+./build/bin/kalman_filter_app  # Linux/macOS
 # or
-.\bin\kalman_filter_app.exe  # Windows
+.\build\bin\Release\kalman_filter_app.exe  # Windows (Visual Studio generator)
 ```
+
+## Running Unit Tests
+
+```bash
+# Build test target
+cmake --build build --config Release --target unit_tests
+
+# Run all discovered tests
+ctest --test-dir build --output-on-failure
+```
+
+The initial test verifies state transition correctness for a constant velocity model:
+$P_{k+1} = P_k + V_k \cdot dt$ after one `Predict` step.
+
+## Continuous Integration
+
+GitHub Actions is configured to:
+
+1. Install Eigen3 on Ubuntu
+2. Configure and build with CMake
+3. Run `ctest` to validate Kalman filter logic on every push and pull request
 
 ## Running the Simulation
 
 Execute the compiled binary:
 
 ```bash
-./bin/kalman_filter_app
+./build/bin/kalman_filter_app  # Linux/macOS
+# or
+.\build\bin\Release\kalman_filter_app.exe  # Windows (Visual Studio generator)
 ```
 
 ### Output
