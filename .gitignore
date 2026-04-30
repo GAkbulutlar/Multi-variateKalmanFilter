@@ -1,0 +1,46 @@
+# Build artifacts
+build/
+dist/
+bin/
+*.o
+*.a
+*.so
+*.dll
+*.dylib
+
+# CMake
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+*.cmake
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-*
+.clangd
+
+# Compiled binaries
+*.exe
+*.out
+*.app
+
+# Generated documentation
+doxygen/
+html/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+*.manifest
+
+# Temporary and backup files
+*.tmp
+*.bak
+*.orig
+*.rej
